@@ -40,12 +40,12 @@ let UserController = class UserController {
         const game = await entity_1.default.findOne(id);
         if (!game)
             throw new routing_controllers_1.NotFoundError('game not found');
-        const color = update.color;
-        if (!contains(colors, color)) {
-            throw new routing_controllers_1.NotFoundError('Not a possible color');
+        if (update.color && !contains(colors, update.color)) {
+            throw new routing_controllers_1.BadRequestError('Not a possible color');
         }
-        if (moves(game.board, update.board) !== 1)
+        if (update.board && moves(game.board, update.board) > 1) {
             throw new routing_controllers_1.BadRequestError('HTTP 400 Bad Request');
+        }
         return entity_1.default.merge(game, update).save();
     }
 };

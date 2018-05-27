@@ -54,20 +54,18 @@ export default class UserController {
     @Put('/games/:id')
     async updateGame(
     @Param('id') id: number,
-    @Body() update: Partial<Game>
-    ) {
-    const game = await Game.findOne(id)
-    if (!game) throw new NotFoundError('game not found')
+    @Body() update: Partial<Game>) {
+        const game = await Game.findOne(id)
+        if (!game) throw new NotFoundError('game not found')
 
-    const color = update.color
-    if ( !contains(colors, color)) {
-        throw new NotFoundError('Not a possible color')
+    if ( update.color && !contains(colors, update.color)) {
+        throw new BadRequestError('Not a possible color')
     }  
-    
-    if( moves(game.board, update.board) !== 1) throw new BadRequestError('HTTP 400 Bad Request')
-    
-    // update.id = undefined
 
+    if( update.board && moves(game.board, update.board) > 1) {
+        throw new BadRequestError('HTTP 400 Bad Request')
+    }
+    
     return Game.merge(game, update).save()
     }
     
