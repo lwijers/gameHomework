@@ -1,21 +1,24 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
 
+const board = [
+  ['o', 'o', 'o'],
+  ['o', 'o', 'o'],
+  ['o', 'o', 'o']
+]
+
 @Entity()
-export default class User extends BaseEntity {
+export default class Game extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id?: number
 
   @Column('text', {nullable:false})
-  firstName: string
+  name: string
 
   @Column('text', {nullable:false})
-  lastName: string
+  color: string
 
-  @Column('text', {nullable:false})
-  email: string
-
-  @Column('text')
-  city: string
+  @Column('json', {default: board, nullable:false})
+  board: JSON
 }
